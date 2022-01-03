@@ -186,6 +186,8 @@ git clone https://github.com/jhao104/proxy_pool.git
 
 将上面创建的三个文件放在proxy_pool根目录下
 
+ps：上述三个文件已上传到本仓库
+
 docker-compose up 启动容器
 
 ### python 测试代码
