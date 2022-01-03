@@ -1,0 +1,46 @@
+version: '3.5'
+services:
+  proxy_pool:
+    build: .
+    container_name: proxy_pool
+    ports:
+      - "5010:5010"
+    depends_on:
+      - proxy_redis
+    restart: always
+    environment:
+      DB_CONN: "redis://@proxy_redis:6379/0"
+    networks:
+      proxy_network:
+        ipv4_address: 192.168.112.2
+
+  proxy_redis:
+    image: "redis"
+    container_name: proxy_redis
+    restart: always
+    networks:
+      proxy_network: 
+        ipv4_address: 192.168.112.3
+
+  proxy_nginx: 
+    build:
+      context: .
+      dockerfile: Nginx
+    restart: always
+    depends_on: 
+      - proxy_redis
+    ports:
+      - "8888:80"
+    container_name: proxy_nginx
+    networks:
+      proxy_network: 
+        ipv4_address: 192.168.112.112
+
+
+networks:
+  proxy_network:
+    name: "proxy_network"
+    driver: "bridge"
+    ipam:
+      config:
+        - subnet: 192.168.112.0/24
